@@ -1,0 +1,17 @@
+image_path,label_path
+./Data/images\img_020.jpg,./Data/labels/train\img_020.txt
+./Data/images\img_006.jpg,./Data/labels/train\img_006.txt
+./Data/images\img_015.jpg,./Data/labels/train\img_015.txt
+./Data/images\img_005.jpg,./Data/labels/train\img_005.txt
+./Data/images\img_010.jpg,./Data/labels/train\img_010.txt
+./Data/images\img_014.jpg,./Data/labels/train\img_014.txt
+./Data/images\img_016.jpg,./Data/labels/train\img_016.txt
+./Data/images\img_019.jpg,./Data/labels/train\img_019.txt
+./Data/images\img_007.jpg,./Data/labels/train\img_007.txt
+./Data/images\img_013.jpg,./Data/labels/train\img_013.txt
+./Data/images\img_018.jpg,./Data/labels/train\img_018.txt
+./Data/images\img_011.jpg,./Data/labels/train\img_011.txt
+./Data/images\img_002.jpg,./Data/labels/train\img_002.txt
+./Data/images\img_012.jpg,./Data/labels/train\img_012.txt
+./Data/images\img_003.jpg,./Data/labels/train\img_003.txt
+./Data/images\img_017.jpg,./Data/labels/train\img_017.txt

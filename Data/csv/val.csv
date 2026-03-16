@@ -1,0 +1,5 @@
+image_path,label_path
+./Data/images\img_008.jpg,./Data/labels/train\img_008.txt
+./Data/images\img_009.jpg,./Data/labels/train\img_009.txt
+./Data/images\img_001.jpg,./Data/labels/train\img_001.txt
+./Data/images\img_004.jpg,./Data/labels/train\img_004.txt
