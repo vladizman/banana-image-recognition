@@ -1,5 +1,5 @@
 import torch
-from PIL import Image
+from PIL import Image, ImageOps
 from utils import resize_box_xyxy
 from torchvision.transforms.functional import to_tensor, resize
 
@@ -13,43 +13,48 @@ class ObjDetectionDataset(torch.utils.data.Dataset):
         return len(self.df)
 
     def __getitem__(self, idx):
-        # TODO 1: Get the row number idx from dataframe
-        # your code here
+        # Get row
         row = self.df.iloc[idx]
 
+        # Load image
         img = Image.open(row["image_path"]).convert("RGB")
-        w, h = img.size
-        new_h, new_w = self.image_size
-        image = to_tensor(img)
+        img = ImageOps.exif_transpose(img)
 
-        boxes, labels = [], []
+        original_w, original_h = img.size
+        new_h, new_w = self.image_size
+
+        boxes = []
+        labels = []
+
+        # Read label file
         with open(row["label_path"]) as f:
             for line in f:
                 cls, xc, yc, bw, bh = map(float, line.split())
-                x1 = (xc - bw/2) * w
-                y1 = (yc - bh/2) * h
-                x2 = (xc + bw/2) * w
-                y2 = (yc + bh/2) * h
 
-                # resize box to match resized image
+                # Convert YOLO -> XYXY (original size)
+                x1 = (xc - bw / 2) * original_w
+                y1 = (yc - bh / 2) * original_h
+                x2 = (xc + bw / 2) * original_w
+                y2 = (yc + bh / 2) * original_h
+
+                # Resize box
                 x1, y1, x2, y2 = resize_box_xyxy(
                     (x1, y1, x2, y2),
-                    w, h,
+                    original_w, original_h,
                     new_w, new_h
                 )
 
                 boxes.append([x1, y1, x2, y2])
-                labels.append(int(cls) + 1)
+                labels.append(int(cls) + 1)  # background = 0
 
-                #resize
-                img = resize(img, (new_h, new_w))
-                image = to_tensor(img)
+        # Resize image ONCE
+        img = resize(img, (new_h, new_w))
+        image = to_tensor(img)
 
         target = {
             "boxes": torch.tensor(boxes, dtype=torch.float32),
             "labels": torch.tensor(labels, dtype=torch.int64),
             "image_id": torch.tensor([idx]),
         }
-        # TODO 2: Return what you need from this class
-        # your code here
+
         return image, target

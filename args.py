@@ -16,7 +16,7 @@ def get_args():
 
     parser.add_argument('--batch_size', type=int, default=8, choices=[8, 16, 32, 64])
 
-    parser.add_argument('--epochs', type=int, default=12)
+    parser.add_argument('--epochs', type=int, default=8)
 
     parser.add_argument('--num_classes', type=int, default=1)
 
