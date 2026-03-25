@@ -1,11 +1,13 @@
 import torch
 from PIL import Image
-from torchvision.transforms.functional import to_tensor
+from utils import resize_box_xyxy
+from torchvision.transforms.functional import to_tensor, resize
 
 
 class ObjDetectionDataset(torch.utils.data.Dataset):
-    def __init__(self, df):
+    def __init__(self, df, image_size=(640, 640)):
         self.df = df.reset_index(drop=True)
+        self.image_size = image_size
 
     def __len__(self):
         return len(self.df)
@@ -17,6 +19,7 @@ class ObjDetectionDataset(torch.utils.data.Dataset):
 
         img = Image.open(row["image_path"]).convert("RGB")
         w, h = img.size
+        new_h, new_w = self.image_size
         image = to_tensor(img)
 
         boxes, labels = [], []
@@ -27,8 +30,20 @@ class ObjDetectionDataset(torch.utils.data.Dataset):
                 y1 = (yc - bh/2) * h
                 x2 = (xc + bw/2) * w
                 y2 = (yc + bh/2) * h
+
+                # resize box to match resized image
+                x1, y1, x2, y2 = resize_box_xyxy(
+                    (x1, y1, x2, y2),
+                    w, h,
+                    new_w, new_h
+                )
+
                 boxes.append([x1, y1, x2, y2])
                 labels.append(int(cls) + 1)
+
+                #resize
+                img = resize(img, (new_h, new_w))
+                image = to_tensor(img)
 
         target = {
             "boxes": torch.tensor(boxes, dtype=torch.float32),
