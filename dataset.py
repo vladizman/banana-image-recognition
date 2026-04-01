@@ -2,13 +2,17 @@ import torch
 from PIL import Image, ImageOps
 from utils import resize_box_xyxy
 from torchvision.transforms.functional import to_tensor, resize
+import augmentations as aug
 
 
 class ObjDetectionDataset(torch.utils.data.Dataset):
-    def __init__(self, df, image_size=(640, 640)):
+    def __init__(self, df, transform=None, image_size=(640, 640)):
         self.df = df.reset_index(drop=True)
         self.image_size = image_size
-
+        if transform is None:
+            self.transform = aug.NoTransform()
+        else:
+            self.transform = transform
     def __len__(self):
         return len(self.df)
 
@@ -57,4 +61,6 @@ class ObjDetectionDataset(torch.utils.data.Dataset):
             "image_id": torch.tensor([idx]),
         }
 
+        image, target = self.transform(image, target)
+        
         return image, target
