@@ -6,13 +6,13 @@ import augmentations as aug
 
 
 class ObjDetectionDataset(torch.utils.data.Dataset):
-    def __init__(self, df, transform=None, image_size=(640, 640)):
+    def __init__(self, df, transform=None, image_size=(512, 512)):
         self.df = df.reset_index(drop=True)
         self.image_size = image_size
         if transform is None:
             self.transform = aug.NoTransform()
         else:
-            self.transform = transform
+            self.transform = aug.Compose(transform)
     def __len__(self):
         return len(self.df)
 
@@ -62,5 +62,5 @@ class ObjDetectionDataset(torch.utils.data.Dataset):
         }
 
         image, target = self.transform(image, target)
-        
+
         return image, target

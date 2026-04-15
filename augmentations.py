@@ -668,43 +668,39 @@ def build_train_transforms(image_size):
     return [
         Resize((image_size, image_size)),
         HorizontalFlip(prob=0.5),
-        OneOf(
-            [
-                NoTransform(),
-                Scale(ratio_range=(0.85, 1.15), prob=1.0),
-                Translate(x_frac=(-0.08, 0.08), y_frac=(-0.08, 0.08), prob=1.0),
-                Rotate(degree_range=(-10, 10), prob=1.0),
-                Shear(x_degree_range=(-8, 8), y_degree_range=(-4, 4), prob=1.0),
-                RandomResizedCrop(
-                    output_size=(image_size, image_size),
-                    scale=(0.75, 1.0),
-                    ratio=(0.9, 1.1),
-                    prob=1.0,
-                    min_visibility=0.30,
+                OneOf(
+                    [
+                        NoTransform(),
+                        Scale(ratio_range=(0.85, 1.15), prob=1.0),
+                        Translate(x_frac=(-0.08, 0.08), y_frac=(-0.08, 0.08), prob=1.0),
+                        Rotate(degree_range=(-10, 10), prob=1.0),
+                        RandomResizedCrop(
+                            output_size=(image_size, image_size),
+                            scale=(0.85, 1.0),
+                            ratio=(0.9, 1.1),
+                            prob=1.0,
+                            min_visibility=0.30,
+                        ),
+                        RandomZoomOut(side_range=(1.0, 1.3), prob=1.0),
+                    ],
+                    prob=0.80,
                 ),
-                RandomZoomOut(side_range=(1.0, 1.3), prob=1.0),
-            ],
-            prob=0.80,
-        ),
-        OneOf(
-            [
-                NoTransform(),
-                ColorJitter(brightness=0.20, contrast=0.20, saturation=0.15, hue=0.03, prob=1.0),
-                GaussianBlur(kernel_size=3, sigma=(0.1, 1.5), prob=1.0),
-                RandomGrayscale(prob=1.0),
-                RandomSharpness(sharpness_factor_range=(0.7, 1.8), prob=1.0),
-            ],
-            prob=0.60,
-        ),
-        ToTensor(),
-        OneOf(
-            [
-                NoTransform(),
-                GaussianNoise(std_range=(0.01, 0.03), prob=1.0),
-                RandomErasing(scale=(0.02, 0.06), ratio=(0.5, 2.0), value="random", prob=1.0),
-            ],
-            prob=0.25,
-        ),
+                    OneOf(
+                        [
+                            NoTransform(),
+                            ColorJitter(brightness=0.20, contrast=0.20, saturation=0.15, hue=0.03, prob=1.0),
+                            RandomSharpness(sharpness_factor_range=(0.7, 1.8), prob=1.0),
+                        ],
+                        prob=0.60,
+                    ),
+                        ToTensor(),
+                        OneOf(
+                            [
+                                NoTransform(),
+                                GaussianNoise(std_range=(0.01, 0.03), prob=1.0),
+                            ],
+                            prob=0.25,
+                        ),
     ]
 
 

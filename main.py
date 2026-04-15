@@ -17,11 +17,11 @@ def main():
     train_df = pd.read_csv(args.train)
     val_df = pd.read_csv(args.val)
     #2 dataset
-    train_dataset = ObjDetectionDataset(train_df, image_size=(512, 512))
-    val_dataset = ObjDetectionDataset(val_df, image_size=(512, 512))
+    train_dataset = ObjDetectionDataset(train_df, transform=build_train_transforms(args.img_size))
+    val_dataset = ObjDetectionDataset(val_df, transform=build_val_transforms(args.img_size))
     #3create data loaders split the images into batches
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, collate_fn=collate,  num_workers=0,  pin_memory=torch.cuda.is_available(), transforms=build_train_transforms(512))
-    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, collate_fn=collate,num_workers=0,  pin_memory=torch.cuda.is_available(), transforms=build_val_transforms(args.img_size))
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, collate_fn=collate,  num_workers=0,  pin_memory=torch.cuda.is_available())
+    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, collate_fn=collate,num_workers=0,  pin_memory=torch.cuda.is_available())
 
     ##4 init model
     model = build_model(args.backbone, num_classes=args.num_classes + 1)
