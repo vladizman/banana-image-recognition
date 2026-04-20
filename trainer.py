@@ -55,7 +55,7 @@ def train_model(model, train_loader, val_loader, device):
                 }
                 for target in targets
             ]
-           # imgRes = show_batch(images, targets)
+            #imgRes = show_batch(images, targets)
             optimizer.zero_grad()
             loss_dict = model(images, targets)
             loss = sum(loss_value for loss_value in loss_dict.values())
