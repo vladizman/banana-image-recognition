@@ -1,2 +1,5 @@
 sessions/
 *.pth
+test_results/
+lessonone.txt
+.lessonone
